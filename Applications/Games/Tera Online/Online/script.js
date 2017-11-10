@@ -13,5 +13,9 @@ new OnlineScript()
     .preInstall(function(wine, wizard) {
         wine.d3dx9();
         wine.vcrun2013();
+        //maybe needs flash
+    })
+    .postInstall(function(wine, wizard) {
+        wizard.message(tr("If your mouse stays on top left corner, you should set AllowJoystickInput to 0 in  *Terafolder*/Client/S1Game/Config/S1Engine.ini. This can also increase performance"));
     })
     .go();
