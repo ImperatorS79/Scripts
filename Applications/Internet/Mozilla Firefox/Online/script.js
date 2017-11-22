@@ -10,7 +10,7 @@ new OnlineInstallerScript()
     .wineDistribution("staging")
     .category("Internet")
     .executable("firefox.exe")
-    .url("https://download.mozilla.org/?product=firefox-latest&os=win&lang=")
+    .url("https://download.mozilla.org/?product=firefox-latest&os=win")
     .postInstall(function(wine, wizard) {
         new Downloader()
             .wizard(wizard)
