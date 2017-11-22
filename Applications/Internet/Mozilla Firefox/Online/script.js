@@ -1,8 +1,8 @@
-include(["Engines", "Wine", "QuickScript", "OnlineScript"]);
+include(["Engines", "Wine", "QuickScript", "OnlineInstallerScript"]);
 include(["Engines", "Wine", "Engine", "Object"]);
 include(["Utils", "Functions", "Filesystem", "Files"]);
 
-new OnlineScript()
+new OnlineInstallerScript()
     .name("Mozilla Firefox")
     .editor("The Mozilla Fundation")
     .author("ImperatorS79")
