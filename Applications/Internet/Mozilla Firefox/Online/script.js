@@ -1,5 +1,6 @@
 include(["Engines", "Wine", "QuickScript", "OnlineInstallerScript"]);
 include(["Engines", "Wine", "Engine", "Object"]);
+include(["Engines", "Wine", "Verbs", "vcrun2015"]);
 include(["Utils", "Functions", "Filesystem", "Files"]);
 
 new OnlineInstallerScript()
@@ -10,7 +11,10 @@ new OnlineInstallerScript()
     .wineDistribution("staging")
     .category("Internet")
     .executable("firefox.exe")
-    .url("http://ftp.mozilla.org/pub/firefox/releases/56.0.2/win32/en-GB/Firefox%20Setup%2056.0.2.exe")
+    .url("http://ftp.mozilla.org/pub/firefox/releases/54.0/win32/en-GB/Firefox%20Setup%2054.0.exe")
+    .preInstall(function(wine, wizard) {
+        wine.vcrun2015();
+    })
     .postInstall(function(wine, wizard) {
         new Downloader()
             .wizard(wizard)
