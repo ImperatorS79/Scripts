@@ -18,6 +18,6 @@ new OnlineScript()
             .to(wine.prefixDirectory + "drive_c/users/install_flash_player.exe")
 	    .get();
 			
-	    wine.runInsidePrefix("/users/install_flash_player.exe");
+	wine.runInsidePrefix("/users/install_flash_player.exe");
     })
     .go();
