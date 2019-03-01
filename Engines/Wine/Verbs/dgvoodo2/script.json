@@ -1,0 +1,14 @@
+{
+    "scriptName"                 : "dgvoodoo2",
+    "id"                         : "engines.wine.verbs.dgvoodoo2",
+    "compatibleOperatingSystems" : [
+        "LINUX",
+        "MACOSX"
+    ],
+    "testingOperatingSystems" : [
+        "LINUX",
+        "MACOSX"
+    ],
+    "free"          : true,
+    "requiresPatch" : false
+}
