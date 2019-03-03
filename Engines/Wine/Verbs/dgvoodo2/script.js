@@ -12,7 +12,7 @@ include("engines.wine.verbs.dxvk");
 * @returns {Wine} Wine object
 */
 Wine.prototype.dgvoodoo2 = function (glideD3d) {
-    dgvoodoo2Version = "2_55_4";
+    dgvoodoo2Version = "2_55_4_1";
     dgvoodoo2VersionBeta = "WIP58";
     	
 	if (glideD3d = "d3d9"){
