@@ -59,6 +59,9 @@ Wine.prototype.dgvoodoo2 = function (glideD3d) {
         }
     }
     
+    cp(this.prefixDirectory() + "/TMP/dgVoodoo.conf", pathDir);
+    cp(this.prefixDirectory() + "/TMP/dgVoodooCPL.exe", pathDir);
+    
     //override dll ?
     
     remove(this.prefixDirectory() + "/TMP/");
