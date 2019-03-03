@@ -8,19 +8,27 @@ include("engines.wine.verbs.dxvk");
 /**
 * Verb to install dgvoodoo2
 * see: http://www.dege.freeweb.hu/dgVoodoo2/dgVoodoo2.html
-* @param {String} glideD3d glide to install glide, d3d to install d3d1-8, nothing to install both
+* @param {String} glideD3d glide to install glide, d3d1-8 to install d3d1-8, nothing to install both
 * @returns {Wine} Wine object
 */
 Wine.prototype.dgvoodoo2 = function (glideD3d) {
     dgvoodoo2Version = "2_55_4";
-	
-	//Use WIP for D3D9 ?
-	
-    var setupFile = new Resource()
+    dgvoodoo2VersionBeta = "WIP58";
+    	
+	if (glideD3d = "d3d9"){
+	    var setupFile = new Resource()
+            .wizard(this.wizard())
+            .url("http://www.dege.freeweb.hu/temp/dgVoodoo" + dgvoodoo2VersionBeta + ".zip")
+            .name("dgVoodoo" + dgvoodoo2VersionBeta + ".zip")
+            .get();
+	}
+	else{
+	    var setupFile = new Resource()
         .wizard(this.wizard())
         .url("http://www.dege.freeweb.hu/dgVoodoo2/dgVoodoo" + dgvoodoo2Version + ".zip")
         .name("dgVoodoo" + dgvoodoo2Version + ".zip")
         .get();
+	}
 
     new Extractor()
         .wizard(this.wizard())
@@ -29,35 +37,34 @@ Wine.prototype.dgvoodoo2 = function (glideD3d) {
         .extract();
         
     var message = "Please select the .exe of the programs";
-    var userFilePath = setupWizard.browse(message, this.prefixDirectory(), ["exe"]);
+    var userFilePath = this.wizard().browse(message, this.prefixDirectory(), ["exe"]);
 
-    userFilePath.slice(0,userFilePath.lastIndexOf('/'))
-    
-    print(userFilePath);
-    
-    //Manipulate userFilePath to delete the last part
-    
+    var pathDir = userFilePath.split('/');
+    pathDir.pop();
+    pathDir = pathDir.join('/');    
+        
     if (glideD3D = "glide") {
-        cp(this.prefixDirectory() + "/TMP/3Dfx/x86/Glide3x.dll", userFilePath);
-        cp(this.prefixDirectory() + "/TMP/3Dfx/x86/Glide2x.dll", userFilePath);
-        cp(this.prefixDirectory() + "/TMP/3Dfx/x86/Glide.dll", userFilePath);
-    } else if (glideD3D = "d3d"){
-        cp(this.prefixDirectory() + "/TMP/MS/DDraw.dll", userFilePath);
-        cp(this.prefixDirectory() + "/TMP/MS/D3DImm.dll", userFilePath);
-        cp(this.prefixDirectory() + "/TMP/MS/D3D8.dll", userFilePath);
-    } else {
-        cp(this.prefixDirectory() + "/TMP/3Dfx/x86/Glide3x.dll", userFilePath);
-        cp(this.prefixDirectory() + "/TMP/3Dfx/x86/Glide2x.dll", userFilePath);
-        cp(this.prefixDirectory() + "/TMP/3Dfx/x86/Glide.dll", userFilePath);
-        cp(this.prefixDirectory() + "/TMP/MS/DDraw.dll", userFilePath);
-        cp(this.prefixDirectory() + "/TMP/MS/D3DImm.dll", userFilePath);
-        cp(this.prefixDirectory() + "/TMP/MS/D3D8.dll", userFilePath);
+        cp(this.prefixDirectory() + "/TMP/3Dfx/x86/Glide3x.dll", pathDir);
+        cp(this.prefixDirectory() + "/TMP/3Dfx/x86/Glide2x.dll", pathDir);
+        cp(this.prefixDirectory() + "/TMP/3Dfx/x86/Glide.dll", pathDir);
+    } else if (glideD3D = "d3d1-8"){
+        cp(this.prefixDirectory() + "/TMP/MS/DDraw.dll", pathDir);
+        cp(this.prefixDirectory() + "/TMP/MS/D3DImm.dll", pathDir);
+        cp(this.prefixDirectory() + "/TMP/MS/D3D8.dll", pathDir);
+    } else if (glideD3D = "d3d9"){
+        if (this.architecture() == "amd64") {
+            cp(this.prefixDirectory() + "/TMP/MS/x64/D3D9.dll", pathDir);
+        } else {
+            cp(this.prefixDirectory() + "/TMP/MS/x86/D3D9.dll", pathDir);
+        }
     }
-
+    
+    //override dll ?
+    
     remove(this.prefixDirectory() + "/TMP/");
     
     this.DXVK();
-
+   
     return this;
 }
 
@@ -69,7 +76,7 @@ var verbImplementation = {
         var wine = new Wine();
         wine.prefix(container);
         var wizard = SetupWizard(InstallationType.VERBS, "dgvoodoo2", java.util.Optional.empty());
-        var options = ["glide", "d3d", "both"];
+        var options = ["glide", "d3d1-8", "d3d9"];
         var selectedOption = wizard.menu(tr("Please select the dll's to install."), options, "glide");
         wine.wizard(wizard);
         // install selected version
