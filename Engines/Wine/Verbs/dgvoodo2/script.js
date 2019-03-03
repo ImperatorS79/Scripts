@@ -8,7 +8,7 @@ include("engines.wine.verbs.dxvk");
 /**
 * Verb to install dgvoodoo2
 * see: http://www.dege.freeweb.hu/dgVoodoo2/dgVoodoo2.html
-* @param {String} glideD3d glide to install glide, d3d1-8 to install d3d1-8, nothing to install both
+* @param {String} glideD3d glide, d3d1-8 or d3d9
 * @returns {Wine} Wine object
 */
 Wine.prototype.dgvoodoo2 = function (glideD3d) {
@@ -24,10 +24,10 @@ Wine.prototype.dgvoodoo2 = function (glideD3d) {
 	}
 	else{
 	    var setupFile = new Resource()
-        .wizard(this.wizard())
-        .url("http://www.dege.freeweb.hu/dgVoodoo2/dgVoodoo" + dgvoodoo2Version + ".zip")
-        .name("dgVoodoo" + dgvoodoo2Version + ".zip")
-        .get();
+            .wizard(this.wizard())
+            .url("http://www.dege.freeweb.hu/dgVoodoo2/dgVoodoo" + dgvoodoo2Version + ".zip")
+            .name("dgVoodoo" + dgvoodoo2Version + ".zip")
+            .get();
 	}
 
     new Extractor()
@@ -44,26 +44,36 @@ Wine.prototype.dgvoodoo2 = function (glideD3d) {
     pathDir = pathDir.join('/');    
         
     if (glideD3D = "glide") {
-        cp(this.prefixDirectory() + "/TMP/3Dfx/x86/Glide3x.dll", pathDir);
-        cp(this.prefixDirectory() + "/TMP/3Dfx/x86/Glide2x.dll", pathDir);
-        cp(this.prefixDirectory() + "/TMP/3Dfx/x86/Glide.dll", pathDir);
+        cp(this.prefixDirectory() + "/TMP/3Dfx/x86/Glide3x.dll", pathDir + "/glide3x.dll";
+        cp(this.prefixDirectory() + "/TMP/3Dfx/x86/Glide2x.dll", pathDir + "/glide2x.dll");
+        cp(this.prefixDirectory() + "/TMP/3Dfx/x86/Glide.dll", pathDir + "/glide.dll");
+        
+        this.overrideDLL()
+            .set("builtin", ["glide3x", "glide2x", "glide"])
+            .do();
     } else if (glideD3D = "d3d1-8"){
-        cp(this.prefixDirectory() + "/TMP/MS/DDraw.dll", pathDir);
-        cp(this.prefixDirectory() + "/TMP/MS/D3DImm.dll", pathDir);
-        cp(this.prefixDirectory() + "/TMP/MS/D3D8.dll", pathDir);
+        cp(this.prefixDirectory() + "/TMP/MS/DDraw.dll", pathDir + "/ddraw.dll");
+        cp(this.prefixDirectory() + "/TMP/MS/D3DImm.dll", pathDir + "/d3dimm.dll");
+        cp(this.prefixDirectory() + "/TMP/MS/D3D8.dll", pathDir + "/d3d8.dll");
+        
+        this.overrideDLL()
+            .set("builtin", ["ddraw", "d3dimm", "d3d8"])
+            .do();
     } else if (glideD3D = "d3d9"){
         if (this.architecture() == "amd64") {
-            cp(this.prefixDirectory() + "/TMP/MS/x64/D3D9.dll", pathDir);
+            cp(this.prefixDirectory() + "/TMP/MS/x64/D3D9.dll", pathDir + "/d3d9.dll");
         } else {
-            cp(this.prefixDirectory() + "/TMP/MS/x86/D3D9.dll", pathDir);
+            cp(this.prefixDirectory() + "/TMP/MS/x86/D3D9.dll",  pathDir + "/d3d9.dll");
         }
+        
+        this.overrideDLL()
+            .set("builtin", ["d3d9"])
+            .do();
     }
     
     cp(this.prefixDirectory() + "/TMP/dgVoodoo.conf", pathDir);
     cp(this.prefixDirectory() + "/TMP/dgVoodooCPL.exe", pathDir);
-    
-    //override dll ?
-    
+        
     remove(this.prefixDirectory() + "/TMP/");
     
     this.DXVK();
@@ -82,7 +92,7 @@ var verbImplementation = {
         var options = ["glide", "d3d1-8", "d3d9"];
         var selectedOption = wizard.menu(tr("Please select the dll's to install."), options, "glide");
         wine.wizard(wizard);
-        // install selected version
+        // install selected option
         wine.dgvoodoo2(selectedOption);
         wizard.close();
     }
