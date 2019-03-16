@@ -43,15 +43,15 @@ Wine.prototype.dgvoodoo2 = function (glideD3d) {
     pathDir.pop();
     pathDir = pathDir.join('/');    
         
-    if (glideD3D = "glide") {
-        cp(this.prefixDirectory() + "/TMP/3Dfx/x86/Glide3x.dll", pathDir + "/glide3x.dll";
+    if (glideD3D == "glide") {
+        cp(this.prefixDirectory() + "/TMP/3Dfx/x86/Glide3x.dll", pathDir + "/glide3x.dll");
         cp(this.prefixDirectory() + "/TMP/3Dfx/x86/Glide2x.dll", pathDir + "/glide2x.dll");
         cp(this.prefixDirectory() + "/TMP/3Dfx/x86/Glide.dll", pathDir + "/glide.dll");
         
         this.overrideDLL()
             .set("builtin", ["glide3x", "glide2x", "glide"])
             .do();
-    } else if (glideD3D = "d3d1-8"){
+    } else if (glideD3D == "d3d1-8"){
         cp(this.prefixDirectory() + "/TMP/MS/DDraw.dll", pathDir + "/ddraw.dll");
         cp(this.prefixDirectory() + "/TMP/MS/D3DImm.dll", pathDir + "/d3dimm.dll");
         cp(this.prefixDirectory() + "/TMP/MS/D3D8.dll", pathDir + "/d3d8.dll");
@@ -59,7 +59,7 @@ Wine.prototype.dgvoodoo2 = function (glideD3d) {
         this.overrideDLL()
             .set("builtin", ["ddraw", "d3dimm", "d3d8"])
             .do();
-    } else if (glideD3D = "d3d9"){
+    } else if (glideD3D == "d3d9"){
         if (this.architecture() == "amd64") {
             cp(this.prefixDirectory() + "/TMP/MS/x64/D3D9.dll", pathDir + "/d3d9.dll");
         } else {
@@ -72,7 +72,7 @@ Wine.prototype.dgvoodoo2 = function (glideD3d) {
     }
     
     cp(this.prefixDirectory() + "/TMP/dgVoodoo.conf", pathDir);
-    cp(this.prefixDirectory() + "/TMP/dgVoodooCPL.exe", pathDir);
+    cp(this.prefixDirectory() + "/TMP/dgVoodooCpl.exe", pathDir);
         
     remove(this.prefixDirectory() + "/TMP/");
     
