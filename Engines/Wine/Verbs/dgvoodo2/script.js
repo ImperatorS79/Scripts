@@ -12,8 +12,8 @@ include("engines.wine.verbs.dxvk");
 * @returns {Wine} Wine object
 */
 Wine.prototype.dgvoodoo2 = function (glideD3d) {
-    dgvoodoo2Version = "2_55_4_1";
-    dgvoodoo2VersionBeta = "WIP59";
+    const dgvoodoo2Version = "2_55_4_1";
+    const dgvoodoo2VersionBeta = "WIP59";
     	
 	if (glideD3d = "d3d9"){
 	    var setupFile = new Resource()
@@ -75,29 +75,29 @@ Wine.prototype.dgvoodoo2 = function (glideD3d) {
     cp(this.prefixDirectory() + "/TMP/dgVoodooCpl.exe", pathDir);
         
     remove(this.prefixDirectory() + "/TMP/");
-    
-    this.DXVK();
-   
+       
     return this;
 }
 
 /**
  * Verb to install dgvoodoo2
-*/
-var verbImplementation = {
-    install: function (container) {
-        var wine = new Wine();
+ */
+// eslint-disable-next-line no-unused-vars
+class DgVooDoo2Verb {
+    constructor() {
+        // do nothing
+    }
+
+    install(container) {
+        const wizard = SetupWizard(InstallationType.VERBS, "dgvoodoo2", java.util.Optional.empty());
+        const options = ["glide", "d3d1-8", "d3d9"];
+        const selectedOption = wizard.menu(tr("Please select the dll's to install."), options, "glide");
+        const wine = new Wine();
         wine.prefix(container);
-        var wizard = SetupWizard(InstallationType.VERBS, "dgvoodoo2", java.util.Optional.empty());
-        var options = ["glide", "d3d1-8", "d3d9"];
-        var selectedOption = wizard.menu(tr("Please select the dll's to install."), options, "glide");
-        wine.wizard(wizard);
+	wine.wizard(wizard);
         // install selected option
-        wine.dgvoodoo2(selectedOption);
+        wine.dgvoodoo2(selectedOption.text);
         wizard.close();
     }
-};
-
-/* exported Verb */
-var Verb = Java.extend(org.phoenicis.engines.Verb, verbImplementation);
+}
 
