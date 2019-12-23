@@ -1,11 +1,11 @@
 const Wine = include("engines.wine.engine.object");
 const Resource = include("utils.functions.net.resource");
-const { cp } = include("utils.functions.filesystem.files");
+const { cp, fileExists, mkdir } = include("utils.functions.filesystem.files");
 const { CabExtract } = include("utils.functions.filesystem.extract");
 
 const Optional = Java.type("java.util.Optional");
 
-include("engines.wine.plugins.register_font");
+const RegisterFont = include("engines.wine.plugins.register_font");
 
 /**
  * Verb to install the Tahoma font
@@ -19,6 +19,10 @@ class Tahoma {
         const wizard = this.wine.wizard();
         const prefixDirectory = this.wine.prefixDirectory();
         const fontDirectory = this.wine.fontDirectory();
+
+        if (!fileExists(fontDirectory)) {
+            mkdir(fontDirectory);
+        }
 
         const tahoma = new Resource()
             .wizard(wizard)
@@ -36,11 +40,10 @@ class Tahoma {
         cp(`${prefixDirectory}/drive_c/tahoma/tahoma.ttf`, fontDirectory);
         cp(`${prefixDirectory}/drive_c/tahoma/tahomabd.ttf`, fontDirectory);
 
-        this.wine
-            .registerFont()
-            .set("Tahoma", "tahoma.ttf")
-            .set("Tahoma Bold", "tahomabd.ttf")
-            .do();
+        new RegisterFont(this.wine)
+            .withFont("Tahoma", "tahoma.ttf")
+            .withFont("Tahoma Bold", "tahomabd.ttf")
+            .go();
     }
 
     static install(container) {
